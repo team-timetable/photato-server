@@ -1,14 +1,14 @@
 import { Module } from "@nestjs/common";
-import { BoardsController } from "./photo.controller";
-import { BoardsService } from "./photo.service";
+import { PhotoController } from "./photo.controller";
+import { PhotoService } from "./photo.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { BoardRepository } from "./photo.repository";
-import { Board } from "./photo.entity";
+import { PhotoRepository } from "./photo.repository";
+import { Photo } from "./photo.entity";
 import { AuthModule } from "src/auth/auth.module";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Board]), AuthModule],
-  controllers: [BoardsController],
-  providers: [BoardsService, BoardRepository],
+  imports: [TypeOrmModule.forFeature([Photo]), AuthModule],
+  controllers: [PhotoController],
+  providers: [PhotoService, PhotoRepository],
 })
 export class BoardsModule {}

@@ -21,7 +21,7 @@ import { ApiBearerAuth } from "@nestjs/swagger";
 
 @Controller("photo")
 @ApiBearerAuth("access-token")
-export class SharePhotoController {
+export class PhotoController {
   constructor(private photoService: PhotoService) {}
 
   @Get("/")
