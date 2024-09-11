@@ -17,11 +17,11 @@ import { Photo } from "./photo.entity";
 import { AuthGuard } from "@nestjs/passport";
 import { GetUser } from "src/auth/get-user.decorator";
 import { User } from "src/auth/user.entity";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiParam, ApiTags } from "@nestjs/swagger";
 
 @Controller("photo")
 @ApiBearerAuth("access-token")
-@ApiTags('PHOTO')
+@ApiTags("PHOTO")
 export class PhotoController {
   constructor(private photoService: PhotoService) {}
 
@@ -30,7 +30,7 @@ export class PhotoController {
     return this.photoService.getAllPublicPhotos();
   }
 
-  @Get("/:id")
+  @Get("/:photoId")
   async getPublicPhotoById(@Param("id") photoId: number): Promise<Photo> {
     return this.photoService.getPublicPhotoById(photoId);
   }
@@ -42,7 +42,7 @@ export class PhotoController {
     return this.photoService.getAllPrivatePhotos(user);
   }
 
-  @Get("/private/:id")
+  @Get("/private/:photoId")
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard("jwt"))
   async getPrivatePhotoById(
@@ -52,9 +52,10 @@ export class PhotoController {
     return this.photoService.getPrivatePhotoById(photoId, user);
   }
 
-  @Patch("/make-public/:id")
+  @Patch("/make-public/:photoId")
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard("jwt"))
+  @ApiParam({ name: "id", type: String, description: "photo id" })
   async makePublic(
     @GetUser() user: User,
     @Param() photoId: number
@@ -62,9 +63,10 @@ export class PhotoController {
     this.photoService.makePublic(photoId, user);
   }
 
-  @Patch("/make-private/:id")
+  @Patch("/make-private/:photoId")
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard("jwt"))
+  @ApiParam({ name: "id", type: String, description: "photo id" })
   async makePrivate(
     @GetUser() user: User,
     @Param() photoId: number
@@ -82,7 +84,7 @@ export class PhotoController {
     return this.photoService.createPhoto(photoDto, user);
   }
 
-  @Delete("/:id")
+  @Delete("/:photoId")
   @UseGuards(AuthGuard())
   async deleteBoard(
     @Param("id") photoId: number,

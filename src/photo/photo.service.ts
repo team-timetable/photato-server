@@ -90,6 +90,9 @@ export class PhotoService {
   }
 
   async makePublic(photoId: number, user: User): Promise<Photo> {
+    if(!photoId) {
+      throw new NotFoundException('photo id is required');
+    }
     const target = await this.photoRepository.findOne({
       where: { id: photoId, author: user },
     });
@@ -105,6 +108,9 @@ export class PhotoService {
   }
 
   async makePrivate(photoId: number, user: User): Promise<Photo> {
+    if (!photoId) {
+      throw new NotFoundException("photo id is required");
+    }
     const target = await this.photoRepository.findOne({
       where: { id: photoId, author: user },
     });
