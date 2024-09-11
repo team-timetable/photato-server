@@ -102,7 +102,7 @@ export class PhotoService {
       );
     }
     target.isPublic = true;
-    const res = this.photoRepository.save(target);
+    const res = await this.photoRepository.save(target);
 
     return res;
   }
@@ -120,7 +120,7 @@ export class PhotoService {
       );
     }
     target.isPublic = false;
-    const res = this.photoRepository.save(target);
+    const res = await this.photoRepository.save(target);
 
     return res;
   }
