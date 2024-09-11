@@ -14,8 +14,8 @@ import { GetUser } from "./get-user.decorator";
 import { User } from "./user.entity";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { RefreshTokenDto } from "./dto/refreshToken.dto";
-import { Board } from "src/photoShare/board.entity";
 import { instanceToPlain } from "class-transformer";
+import { Photo } from "src/photo/photo.entity";
 
 @Controller("auth")
 @ApiTags("AUTH")
@@ -41,17 +41,16 @@ export class AuthController {
   @UseGuards(AuthGuard("jwt"))
   async me(
     @GetUser() user: User
-  ): Promise<{ username: string; role: "MEMBER" | "DEFAULT"; board: Board[] }> {
-    const userWithBoards = await User.findOne({
+  ): Promise<{ username: string; photo: Photo[] }> {
+    const userWithPhotos = await User.findOne({
       where: { id: user.id },
-      relations: ["board"],
+      relations: ["photo"],
     });
 
-    const plainUser = instanceToPlain(userWithBoards);
+    const plainUser = instanceToPlain(userWithPhotos);
     return {
       username: plainUser["username"],
-      board: plainUser["board"],
-      role: plainUser["role"],
+      photo: plainUser["photo"],
     };
   }
 
