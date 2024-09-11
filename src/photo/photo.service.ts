@@ -103,6 +103,8 @@ export class PhotoService {
     }
     target.isPublic = true;
     const res = await this.photoRepository.save(target);
+    console.log("Updated Photo:", target);
+    console.log('updated res:',res);
 
     return res;
   }
@@ -121,6 +123,8 @@ export class PhotoService {
     }
     target.isPublic = false;
     const res = await this.photoRepository.save(target);
+    console.log("Updated Photo:", target);
+    console.log("updated res:", res);
 
     return res;
   }
