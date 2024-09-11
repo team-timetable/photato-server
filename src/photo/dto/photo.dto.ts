@@ -19,10 +19,6 @@ export class PhotoDto {
   fourthPhoto: string;
 
   @IsNotEmpty()
-  @ApiProperty({ type: String, description: "taken date" })
-  takenDate: string;
-
-  @IsNotEmpty()
   @ApiProperty({ type: Boolean, description: "disclosure scope" })
   isPublic: boolean;
 }

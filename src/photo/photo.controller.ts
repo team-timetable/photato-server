@@ -17,10 +17,11 @@ import { Photo } from "./photo.entity";
 import { AuthGuard } from "@nestjs/passport";
 import { GetUser } from "src/auth/get-user.decorator";
 import { User } from "src/auth/user.entity";
-import { ApiBearerAuth } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
 @Controller("photo")
 @ApiBearerAuth("access-token")
+@ApiTags('PHOTO')
 export class PhotoController {
   constructor(private photoService: PhotoService) {}
 
