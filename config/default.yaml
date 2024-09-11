@@ -1,0 +1,17 @@
+server:
+  port: 3000
+
+db:
+  type: 'mysql'
+  port: 3306
+  database: 'timetable'
+  username: 'root'
+  host: 'localhost'
+  password: 'op1928!!'
+  synchronize: true
+
+jwt:
+  expiration: '30m'
+  secret: 'serveroftimetable'
+  refreshSecret: "refreshtimetable"
+  refreshExpiration: '50000000'
