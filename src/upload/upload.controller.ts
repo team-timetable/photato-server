@@ -12,9 +12,10 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { extname, join } from "path";
 import { Response } from "express";
-import { ApiBody, ApiConsumes, ApiParam } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiParam, ApiTags } from "@nestjs/swagger";
 
 @Controller("upload")
+@ApiTags('File')
 export class UploadController {
   @Post("file")
   @UseInterceptors(
