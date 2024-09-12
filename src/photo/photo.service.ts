@@ -1,6 +1,7 @@
 import {
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from "@nestjs/common";
 import { PhotoDto } from "./dto/photo.dto";
 import { Photo } from "./photo.entity";
@@ -17,6 +18,11 @@ export class PhotoService {
   ) {}
 
   async createPhoto(photoDto: PhotoDto, user: User): Promise<Photo> {
+    if (!user) {
+      throw new UnauthorizedException(
+        "please include token in header:Authorization"
+      );
+    }
     const { ...photo } = photoDto;
     const takenDate = new Date().toLocaleDateString();
     const newContent = this.photoRepository.create({
@@ -63,6 +69,9 @@ export class PhotoService {
   }
 
   async getAllPrivatePhotos(user: User): Promise<Photo[]> {
+    if(!user) {
+      throw new UnauthorizedException('please include token in header:Authorization');
+    }
     const res = await this.photoRepository.find({
       where: { author: user },
       order: {
@@ -76,6 +85,11 @@ export class PhotoService {
   }
 
   async getPrivatePhotoById(photoId: number, user: User): Promise<Photo> {
+    if (!user) {
+      throw new UnauthorizedException(
+        "please include token in header:Authorization"
+      );
+    }
     const res = await this.photoRepository.findOne({
       where: { author: user, id: photoId },
     });
@@ -89,6 +103,11 @@ export class PhotoService {
   }
 
   async makePublic(photoId: number, user: User): Promise<Photo> {
+    if (!user) {
+      throw new UnauthorizedException(
+        "please include token in header:Authorization"
+      );
+    }
     if(!photoId) {
       throw new NotFoundException('photo id is required');
     }
@@ -107,6 +126,11 @@ export class PhotoService {
   }
 
   async makePrivate(photoId: number, user: User): Promise<Photo> {
+    if (!user) {
+      throw new UnauthorizedException(
+        "please include token in header:Authorization"
+      );
+    }
     if (!photoId) {
       throw new NotFoundException("photo id is required");
     }
@@ -125,6 +149,11 @@ export class PhotoService {
   }
 
   async deletePhoto(photoId: number, user: User): Promise<void> {
+    if (!user) {
+      throw new UnauthorizedException(
+        "please include token in header:Authorization"
+      );
+    }
     const res = await this.photoRepository.findOne({
       where: { id: photoId, author: user },
     });
