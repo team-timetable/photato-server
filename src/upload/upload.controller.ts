@@ -15,7 +15,7 @@ import { Response } from "express";
 import { ApiBody, ApiConsumes, ApiParam, ApiTags } from "@nestjs/swagger";
 
 @Controller("upload")
-@ApiTags('File')
+@ApiTags('FILE')
 export class UploadController {
   @Post("file")
   @UseInterceptors(
