@@ -30,16 +30,16 @@ export class PhotoController {
     return this.photoService.getAllPublicPhotos();
   }
 
-  @Get("/:photoId")
-  async getPublicPhotoById(@Param("photoId") photoId: number): Promise<Photo> {
-    return this.photoService.getPublicPhotoById(photoId);
-  }
-
   @Get("/private")
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard("jwt"))
   async getAllPrivatePhotos(@GetUser() user: User): Promise<Photo[]> {
     return this.photoService.getAllPrivatePhotos(user);
+  }
+
+  @Get("/:photoId")
+  async getPublicPhotoById(@Param("photoId") photoId: number): Promise<Photo> {
+    return this.photoService.getPublicPhotoById(photoId);
   }
 
   @Get("/private/:photoId")
@@ -58,7 +58,7 @@ export class PhotoController {
   @ApiParam({ name: "photoId", type: String, description: "photo id" })
   async makePublic(
     @GetUser() user: User,
-    @Param('photoId') photoId: number
+    @Param("photoId") photoId: number
   ): Promise<Photo> {
     return this.photoService.makePublic(photoId, user);
   }
@@ -69,7 +69,7 @@ export class PhotoController {
   @ApiParam({ name: "photoId", type: String, description: "photo id" })
   async makePrivate(
     @GetUser() user: User,
-    @Param('photoId') photoId: number
+    @Param("photoId") photoId: number
   ): Promise<Photo> {
     return this.photoService.makePrivate(photoId, user);
   }
