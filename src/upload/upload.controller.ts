@@ -17,7 +17,7 @@ import { ApiBody, ApiConsumes, ApiParam, ApiTags } from "@nestjs/swagger";
 @Controller("upload")
 @ApiTags('FILE')
 export class UploadController {
-  @Post("file")
+  @Post("/")
   @UseInterceptors(
     FileInterceptor("file", {
       storage: diskStorage({
@@ -49,7 +49,7 @@ export class UploadController {
     };
   }
 
-  @Get("download/:filename")
+  @Get("/:filename")
   @ApiParam({
     name: "photo",
     type: String,
