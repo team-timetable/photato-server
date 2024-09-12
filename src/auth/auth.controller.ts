@@ -37,23 +37,6 @@ export class AuthController {
     return this.authService.login(loginCredentialDto);
   }
 
-  @Get("/me")
-  @UseGuards(AuthGuard("jwt"))
-  async me(
-    @GetUser() user: User
-  ): Promise<{ username: string; photo: Photo[] }> {
-    const userWithPhotos = await User.findOne({
-      where: { id: user.id },
-      relations: ["photo"],
-    });
-
-    const plainUser = instanceToPlain(userWithPhotos);
-    return {
-      username: plainUser["username"],
-      photo: plainUser["photo"],
-    };
-  }
-
   @Post("/refresh")
   async refresh(@Body() refreshToken: RefreshTokenDto) {
     return this.authService.refreshAccessToken(refreshToken);
