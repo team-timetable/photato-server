@@ -120,9 +120,7 @@ export class PhotoService {
       );
     }
     target.isPublic = true;
-    const res = await this.photoRepository.save(target);
-
-    return res;
+    return await this.photoRepository.save(target);
   }
 
   async makePrivate(photoId: number, user: User): Promise<Photo> {
@@ -143,9 +141,7 @@ export class PhotoService {
       );
     }
     target.isPublic = false;
-    const res = await this.photoRepository.save(target);
-
-    return res;
+    return await this.photoRepository.save(target);
   }
 
   async deletePhoto(photoId: number, user: User): Promise<void> {

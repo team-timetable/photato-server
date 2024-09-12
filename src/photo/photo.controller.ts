@@ -58,7 +58,7 @@ export class PhotoController {
   @ApiParam({ name: "photoId", type: String, description: "photo id" })
   async makePublic(
     @GetUser() user: User,
-    @Param() photoId: number
+    @Param('photoId') photoId: number
   ): Promise<Photo> {
     return this.photoService.makePublic(photoId, user);
   }
@@ -69,7 +69,7 @@ export class PhotoController {
   @ApiParam({ name: "photoId", type: String, description: "photo id" })
   async makePrivate(
     @GetUser() user: User,
-    @Param() photoId: number
+    @Param('photoId') photoId: number
   ): Promise<Photo> {
     return this.photoService.makePrivate(photoId, user);
   }
