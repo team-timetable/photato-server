@@ -59,8 +59,8 @@ export class PhotoController {
   async makePublic(
     @GetUser() user: User,
     @Param() photoId: number
-  ): Promise<void> {
-    this.photoService.makePublic(photoId, user);
+  ): Promise<Photo> {
+    return this.photoService.makePublic(photoId, user);
   }
 
   @Patch("/make-private/:photoId")
@@ -70,8 +70,8 @@ export class PhotoController {
   async makePrivate(
     @GetUser() user: User,
     @Param() photoId: number
-  ): Promise<void> {
-    this.photoService.makePrivate(photoId, user);
+  ): Promise<Photo> {
+    return this.photoService.makePrivate(photoId, user);
   }
 
   @Post()
