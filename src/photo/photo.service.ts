@@ -1,7 +1,6 @@
 import {
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from "@nestjs/common";
 import { PhotoDto } from "./dto/photo.dto";
 import { Photo } from "./photo.entity";

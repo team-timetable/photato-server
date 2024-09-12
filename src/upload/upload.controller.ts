@@ -45,7 +45,7 @@ export class UploadController {
   })
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     return {
-      url: `https://cher1shrxd.me/${file.filename}`,
+      url: `https://file.cher1shrxd.me/${file.filename}`,
     };
   }
 
