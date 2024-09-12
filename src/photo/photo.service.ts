@@ -56,7 +56,7 @@ export class PhotoService {
 
   async getPublicPhotoById(photoId: number): Promise<Photo> {
     const res = await this.photoRepository.findOne({
-      where: { id: photoId },
+      where: { id: photoId, isPublic:true },
       relations: ["author"],
     });
     if (!res) {
@@ -91,7 +91,7 @@ export class PhotoService {
       );
     }
     const res = await this.photoRepository.findOne({
-      where: { id: photoId },
+      where: { id: photoId, author:user },
     });
     if (!res) {
       throw new NotFoundException(
