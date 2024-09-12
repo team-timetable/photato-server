@@ -31,7 +31,7 @@ export class PhotoController {
   }
 
   @Get("/:photoId")
-  async getPublicPhotoById(@Param("id") photoId: number): Promise<Photo> {
+  async getPublicPhotoById(@Param("photoId") photoId: number): Promise<Photo> {
     return this.photoService.getPublicPhotoById(photoId);
   }
 
@@ -47,7 +47,7 @@ export class PhotoController {
   @UseGuards(AuthGuard("jwt"))
   async getPrivatePhotoById(
     @GetUser() user: User,
-    @Param("id") photoId: number
+    @Param("photoId") photoId: number
   ): Promise<Photo> {
     return this.photoService.getPrivatePhotoById(photoId, user);
   }
@@ -55,7 +55,7 @@ export class PhotoController {
   @Patch("/make-public/:photoId")
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard("jwt"))
-  @ApiParam({ name: "id", type: String, description: "photo id" })
+  @ApiParam({ name: "photoId", type: String, description: "photo id" })
   async makePublic(
     @GetUser() user: User,
     @Param() photoId: number
@@ -66,7 +66,7 @@ export class PhotoController {
   @Patch("/make-private/:photoId")
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard("jwt"))
-  @ApiParam({ name: "id", type: String, description: "photo id" })
+  @ApiParam({ name: "photoId", type: String, description: "photo id" })
   async makePrivate(
     @GetUser() user: User,
     @Param() photoId: number
@@ -87,7 +87,7 @@ export class PhotoController {
   @Delete("/:photoId")
   @UseGuards(AuthGuard())
   async deleteBoard(
-    @Param("id") photoId: number,
+    @Param("photoId") photoId: number,
     @GetUser() user: User
   ): Promise<void> {
     return this.photoService.deletePhoto(photoId, user);
