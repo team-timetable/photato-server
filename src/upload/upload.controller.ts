@@ -14,6 +14,10 @@ import { extname, join } from "path";
 import { Response } from "express";
 import { ApiBody, ApiConsumes, ApiParam, ApiTags } from "@nestjs/swagger";
 import * as sharp from "sharp";
+import * as fs from "fs";
+import { promisify } from "util";
+
+const writeFile = promisify(fs.writeFile);
 
 @Controller("upload")
 @ApiTags("FILE")
@@ -45,17 +49,24 @@ export class UploadController {
     },
   })
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    const outputFilename = `${file.filename.split(".").slice(0, -1).join(".")}-small.jpg`;
-    const outputPath = join("/var/www/files", outputFilename);
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const ext = extname(file.originalname);
+    const filename = `${file.fieldname}-${uniqueSuffix}${ext}`;
+    const outputPath = `/var/www/files/${filename}`;
 
-    await sharp(file.path)
-      .resize(500) 
-      .jpeg({ quality: 80 }) 
-      .toFile(outputPath); 
+    try {
+      await sharp(file.buffer)
+        .resize(800)
+        .toFormat("jpeg")
+        .jpeg({ quality: 80 })
+        .toFile(outputPath);
 
-    return {
-      url: `https://file.cher1shrxd.me/${outputFilename}`,
-    };
+      return {
+        url: `https://file.cher1shrxd.me/${filename}`,
+      };
+    } catch (error) {
+      throw new Error("File processing failed");
+    }
   }
 
   @Get("/:filename")
