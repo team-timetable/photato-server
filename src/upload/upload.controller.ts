@@ -13,9 +13,10 @@ import { diskStorage } from "multer";
 import { extname, join } from "path";
 import { Response } from "express";
 import { ApiBody, ApiConsumes, ApiParam, ApiTags } from "@nestjs/swagger";
+import * as sharp from "sharp";
 
 @Controller("upload")
-@ApiTags('FILE')
+@ApiTags("FILE")
 export class UploadController {
   @Post("/")
   @UseInterceptors(
@@ -43,9 +44,17 @@ export class UploadController {
       },
     },
   })
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
+  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    const outputFilename = `${file.filename.split(".").slice(0, -1).join(".")}-small.jpg`;
+    const outputPath = join("/var/www/files", outputFilename);
+
+    await sharp(file.path)
+      .resize(500) 
+      .jpeg({ quality: 80 }) 
+      .toFile(outputPath); 
+
     return {
-      url: `https://file.cher1shrxd.me/${file.filename}`,
+      url: `https://file.cher1shrxd.me/${outputFilename}`,
     };
   }
 
