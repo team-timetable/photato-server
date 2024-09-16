@@ -9,15 +9,11 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { diskStorage } from "multer";
 import { extname, join } from "path";
 import { Response } from "express";
 import { ApiBody, ApiConsumes, ApiParam, ApiTags } from "@nestjs/swagger";
 import * as sharp from "sharp";
-import * as fs from "fs";
-import { promisify } from "util";
-import { BadRequestException } from "@nestjs/common";
-
-const writeFile = promisify(fs.writeFile);
 
 @Controller("upload")
 @ApiTags("FILE")
@@ -25,7 +21,15 @@ export class UploadController {
   @Post("/")
   @UseInterceptors(
     FileInterceptor("file", {
-      limits: { fileSize: 10 * 1024 * 1024 },
+      storage: diskStorage({
+        destination: "/var/www/files",
+        filename: (req, file, callback) => {
+          const uniqueSuffix =
+            Date.now() + "-" + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          callback(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
+        },
+      }),
     })
   )
   @ApiConsumes("multipart/form-data")
@@ -41,35 +45,17 @@ export class UploadController {
     },
   })
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    if (!file) {
-      throw new BadRequestException("No file uploaded");
-    }
+    const outputFilename = `${file.filename.split(".").slice(0, -1).join(".")}-small.jpg`;
+    const outputPath = join("/var/www/files", outputFilename);
 
-    const ext = extname(file.originalname).toLowerCase();
-    const allowedExtensions = [".jpg", ".jpeg", ".png", ".webp", ".heic"];
+    await sharp(file.path)
+      .resize(500) 
+      .jpeg({ quality: 80 }) 
+      .toFile(outputPath); 
 
-    if (!allowedExtensions.includes(ext)) {
-      throw new BadRequestException("Unsupported file type");
-    }
-
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const filename = `${file.fieldname}-${uniqueSuffix}.jpeg`; 
-
-    try {
-      console.log(`Processing file: ${file.originalname}, size: ${file.size}`);
-
-      sharp(file.buffer)
-        .resize(800)
-        .toFormat("jpeg") 
-        .jpeg({ quality: 80 })
-
-      return {
-        url: `https://file.cher1shrxd.me/${filename}`,
-      };
-    } catch (error) {
-      console.error("Error during image processing:", error.message);
-      throw new Error("File processing failed");
-    }
+    return {
+      url: `https://file.cher1shrxd.me/${outputFilename}`,
+    };
   }
 
   @Get("/:filename")
