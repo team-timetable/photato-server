@@ -1,24 +1,18 @@
 import {
   Controller,
-  Get,
-  NotFoundException,
-  Param,
   Post,
-  Res,
   UploadedFile,
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { diskStorage } from "multer";
-import { extname, join } from "path";
-import { Response } from "express";
-import { ApiBody, ApiConsumes, ApiParam, ApiTags } from "@nestjs/swagger";
-import * as sharp from "sharp";
+import { extname } from "path";
 
 @Controller("upload")
 @ApiTags("FILE")
 export class UploadController {
-  @Post("/")
+  @Post()
   @UseInterceptors(
     FileInterceptor("file", {
       storage: diskStorage({
@@ -44,36 +38,9 @@ export class UploadController {
       },
     },
   })
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    const outputFilename = `${file.filename.split(".").slice(0, -1).join(".")}-small.jpg`;
-    const outputPath = join("/var/www/files", outputFilename);
-
-    await sharp(file.path)
-      .resize(500) 
-      .jpeg({ quality: 80 }) 
-      .toFile(outputPath); 
-
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
     return {
-      url: `https://file.cher1shrxd.me/${outputFilename}`,
+      url: `https://file.cher1shrxd.me/${file.filename}`,
     };
-  }
-
-  @Get("/:filename")
-  @ApiParam({
-    name: "photo",
-    type: String,
-    description: "photo file download",
-  })
-  async downloadFile(
-    @Param("filename") filename: string,
-    @Res() res: Response
-  ) {
-    const filePath = join("/var/www/files", filename);
-
-    try {
-      res.sendFile(filePath);
-    } catch (err) {
-      throw new NotFoundException("File not found");
-    }
   }
 }
